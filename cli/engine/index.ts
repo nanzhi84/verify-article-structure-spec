@@ -95,7 +95,11 @@ async function verifyArticleStructure(articleBody: any, opts: VerifyOpts = {}): 
       if (!byKey[item.key]) byKey[item.key] = { violateRules: item.violateRules || '', items: [] };
       byKey[item.key].items.push({
         outerHTML: item.outerHTML || (item.dom ? item.dom.outerHTML : ''),
-        paragraphIndex: item.paragraphIndex || 0,
+        // 用违规 dom 节点反查真实段号（mp-darkmode 不返回段落信息，旧逻辑
+        // `|| 0` 把所有 item 兜底成第 1 段，编辑器「定位」按钮全部跳错）。
+        // dom 已在原始容器上，data-blockidx 由 getInvalidNodes 盖章，可反查。
+        // 找不到时返回 -1（诚实未知），不要假装成第 1 段。
+        paragraphIndex: resolveParagraphIndex(item.dom, paragraphList),
       });
     });
     Object.assign(layoutIssues, byKey);
