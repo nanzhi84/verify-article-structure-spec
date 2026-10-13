@@ -188,6 +188,7 @@ verify-article-structure-spec/
 
 | 版本 | 日期 | 变更 |
 |---|---|---|
+| 0.2.19 | 2026-10-13 | 非渲染标签（style/meta/title/script 等）不再进入段落列表、零矩形不再误判宽度溢出（修复完整 HTML 文档粘贴时 head 标签泄漏导致的 width 误报，d.html 场景） |
 | 0.2.18 | 2026-10-09 | 无 src 的空 img 与加载失败的 img 不再触发 5s 图片等待硬等待（complete 即跳过 + 无 src 提前过滤），单次检测 ~5.4s → ~0.5s；新增耗时断言回归防退化 |
 | 0.2.17 | 2026-09-29 | line-height 叠字检测行数归并改为垂直区间重叠聚类（重叠 >50% 同行），修复行内片段混排（span/strong/大字号/sub/sup）误报叠字；阈值校准依据：16px CJK 墨水高度实测 14.82px vs 阈值 15.2px |
 | 0.2.16 | 2026-09-10 | line-height 叠字检测改用 Range API 精确测量，修复单行文字 + padding/border 误报叠字 |
