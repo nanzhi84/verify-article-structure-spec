@@ -68,6 +68,19 @@ const badcases = [
     desc: '#1.3 line-height - 行高小于字号导致多行文字重叠（含继承式 line-height: 0）',
   },
 
+  // ===== darkmode-no-gradient =====
+  {
+    // 本地合成用例（e.html）：135 编辑器文章，渐变文字背景 strong 散布在
+    // 10+ 个不同段落。除命中 darkmode-no-gradient 外，还守护 paragraphIndex
+    // 的正确性——mp-darkmode 不返回段落信息，历史上全部兜底成 0，
+    // 导致编辑器「定位」按钮永远跳第 1 段。
+    id: 'darkmode-gradient-multi-paragraph',
+    relatedRule: 'darkmode-no-gradient',
+    expectInvalidKeys: ['darkmode-no-gradient'],
+    desc: '#4.1.2 darkmode-no-gradient - 渐变文字背景散布多段落（守护 paragraphIndex 反查正确性）',
+    requireLocalTpl: true,
+  },
+
   // ===== height =====
   {
     id: 'I6UWLvQ3pMKoocfIK__6vA',
