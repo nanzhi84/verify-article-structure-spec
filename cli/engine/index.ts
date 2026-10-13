@@ -21,12 +21,22 @@ const DARKMODE_RUN_OPTS = {
 
 // Reverse-lookup the paragraph index for a node via the nearest data-blockidx
 // ancestor, falling back to paragraphList.contains. Returns -1 when unknown.
+//
+// stamp 验证包含性：quickRegex 跳过的段落（如无 style 属性的 ul 列表块）
+// 自身子树没有盖章，其内部节点反查会一路穿透到被早期段落盖章的共享外层
+// 容器，得到错误的早期段号（曾把文末的 ul 列表归到第 1 段）。所以找到
+// stamp 后必须确认 paragraphList[idx] 确实包含该节点，否则继续向上；
+// 全部无效时落到 findIndex 兜底（第一个包含该节点的段落）。
 function resolveParagraphIndex(node: any, paragraphList: any[]): number {
   let el = node;
   while (el) {
     if (typeof el.getAttribute === 'function') {
       const idx = el.getAttribute('data-blockidx');
-      if (idx !== null && idx !== undefined && idx !== '') return parseInt(idx, 10);
+      if (idx !== null && idx !== undefined && idx !== '') {
+        const i = parseInt(idx, 10);
+        const p = paragraphList[i];
+        if (p && typeof p.contains === 'function' && p.contains(node)) return i;
+      }
     }
     el = el.parentNode;
   }
