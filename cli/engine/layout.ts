@@ -477,8 +477,14 @@ async function detectLayoutIssues(
       const horizontalCenterDiff = Math.abs(leftDistance - rightDistance);
       const isHorizontallyCentered = horizontalCenterDiff <= 1;
 
+      // 零尺寸矩形（display:none 等未渲染元素）落在视口原点 (0,0)，在离屏
+      // 沙箱坐标系里恒为"溢出"，必须跳过。真实溢出的元素必有非零宽或高。
+      const isNotRendered = rect.width === 0 && rect.height === 0;
+
       // +1px sub-pixel tolerance; exclude symmetric centered overflow (deliberate visual effect).
-      const isOverflowing = (rect.left < pRect.left - 1 || rect.right > pRect.right + 1) && !isHorizontallyCentered;
+      const isOverflowing = !isNotRendered
+        && (rect.left < pRect.left - 1 || rect.right > pRect.right + 1)
+        && !isHorizontallyCentered;
 
       const finding: WidthFinding = {
         violationId,

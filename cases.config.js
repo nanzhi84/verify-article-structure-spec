@@ -286,6 +286,10 @@ const goodcases = [
   {
     id: 'srcless-img-no-wait',
     desc: '反向用例 #9 - 无 src 的空 img（编辑器占位形态）：零违规，且不被 5s 图片等待硬控（waitForImagesToLoad 应提前过滤）',
+  },
+  {
+    id: 'full-document-head-style',
+    desc: '反向用例 #10 - 完整 HTML 文档（Cocoa 导出，含 head/style/meta）：非渲染标签不进段落列表，零矩形不误判溢出（d.html 场景）',
   }
 ];
 
