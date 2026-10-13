@@ -188,6 +188,7 @@ verify-article-structure-spec/
 
 | 版本 | 日期 | 变更 |
 |---|---|---|
+| 0.2.22 | 2026-10-13 | 段号反查增加 stamp 包含性验证：quickRegex 跳过的无样式段落（如 ul 列表块）不再穿透到外层容器的假段号 0，落到真实所属段落 |
 | 0.2.21 | 2026-10-13 | 修复 npm 发布包 check 命令报 __awaiter is not defined（构建 target ES2016→ES2017，async 原生化）；此前发布包的 dist 从 tsc 编译化起即不可用，源码（tsx）路径一直正常 |
 | 0.2.20 | 2026-10-13 | darkmode 违规项（渐变背景/低对比度/白名单）反查真实段落号，修复编辑器「定位」永远跳第 1 段（mp-darkmode 不返回段落信息，旧逻辑全部兜底成 0） |
 | 0.2.19 | 2026-10-13 | 非渲染标签（style/meta/title/script 等）不再进入段落列表、零矩形不再误判宽度溢出（修复完整 HTML 文档粘贴时 head 标签泄漏导致的 width 误报，d.html 场景） |
