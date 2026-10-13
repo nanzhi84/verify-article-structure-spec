@@ -188,6 +188,7 @@ verify-article-structure-spec/
 
 | 版本 | 日期 | 变更 |
 |---|---|---|
+| 0.2.21 | 2026-10-13 | 修复 npm 发布包 check 命令报 __awaiter is not defined（构建 target ES2016→ES2017，async 原生化）；此前发布包的 dist 从 tsc 编译化起即不可用，源码（tsx）路径一直正常 |
 | 0.2.20 | 2026-10-13 | darkmode 违规项（渐变背景/低对比度/白名单）反查真实段落号，修复编辑器「定位」永远跳第 1 段（mp-darkmode 不返回段落信息，旧逻辑全部兜底成 0） |
 | 0.2.19 | 2026-10-13 | 非渲染标签（style/meta/title/script 等）不再进入段落列表、零矩形不再误判宽度溢出（修复完整 HTML 文档粘贴时 head 标签泄漏导致的 width 误报，d.html 场景） |
 | 0.2.18 | 2026-10-09 | 无 src 的空 img 与加载失败的 img 不再触发 5s 图片等待硬等待（complete 即跳过 + 无 src 提前过滤），单次检测 ~5.4s → ~0.5s；新增耗时断言回归防退化 |
