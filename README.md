@@ -11,7 +11,7 @@
 | 内容 | 文件 | 作用 |
 |---|---|---|
 | 📜 **规范文档** | [`verify_article_structure.md`](./verify_article_structure.md) | 所有检测规则的权威定义（章节号、阈值、判定逻辑） |
-| 🖥️ **本地检测 CLI** | [`cli/`](./cli/) | 本地跑全规则检测（`check`）+ 清理冗余嵌套（`dedupe`），puppeteer 真实浏览器 |
+| 🖥️ **本地检测 CLI** | [`cli/`](./cli/) | 本地检测已实现的规则（`check`）+ 清理冗余嵌套（`dedupe`），puppeteer 真实浏览器 |
 | 🧪 **测试用例** | [`cases.config.js`](./cases.config.js) | 违规用例（badcases）+ 合规反向用例（goodcases）|
 
 > 规范文档是规则真理源；本地 CLI 是规范的具体实现，可用于检测文章合规性。
@@ -22,8 +22,10 @@
 
 `cli/` 子目录是一个**自包含**的检测 CLI（TypeScript + puppeteer），复用本仓的 `cases.config.js` 与 `__tests__/fixtures/` 作为回归用例。
 
-- **`check`**：对本地 HTML 文件跑引擎**全规则**校验（含布局类规则 width 差异 / height-zero / line-height 实测叠字等），输出违规结果。
+- **`check`**：对本地 HTML 文件检测已实现的规则（含布局类规则 width 差异 / height:0 / line-height 实测叠字等），输出违规结果。
 - **`dedupe`**：`check` 的姊妹能力，把检测出的冗余嵌套层真删掉，输出清理后的 HTML，形成「检测 → 清理 → 复测清零」闭环。
+
+当前 CLI 尚未接入规范第 3 章的字体检测，以及第 2.2、2.3 节的 `span[leaf]` / `section[nodeleaf]` 结构检测。`redundant-node` 仅预留文案和跳过的用例，尚未纳入规范或实现检测。因此，CLI 检测通过并不代表已覆盖规范全部要求。
 
 > npm 包 `@tencent/verify-article-structure` 暂未对外开放发布，当前请从源码构建使用。
 
