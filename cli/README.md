@@ -1,12 +1,14 @@
 # verify-article-structure-cli
 
-基于 **puppeteer 真实浏览器**的文章结构检测 CLI，对指定 HTML 文件或线上文章 URL 跑引擎**全规则**校验（含布局类规则 `height-nodisplay` / `width` 差异 / `height-zero` / `line-height` 实测叠字 / `checkChildHeightOverflow`），并输出违规结果；`dedupe` 还能清理冗余嵌套。
+基于 **puppeteer 真实浏览器**的文章结构检测 CLI，对指定 HTML 文件检测已实现的规则（含布局类规则 `height-nodisplay` / `width` 差异 / `height:0` / `line-height` 实测叠字），并输出违规结果；`dedupe` 还能清理冗余嵌套。
+
+当前 CLI 尚未接入规范第 3 章的字体检测，以及第 2.2、2.3 节的 `span[leaf]` / `section[nodeleaf]` 结构检测。`redundant-node` 仅预留文案和跳过的用例，尚未纳入规范或实现检测。检测通过并不代表已覆盖规范全部要求。
 
 本子目录**自包含**：自带 `package.json` 显式声明 `puppeteer` / `esbuild` / `tsx` 等依赖，可独立 `pnpm install`。它就位于 `verify-article-structure-spec` 仓内，直接复用本仓的 `cases.config.js` 与 `__tests__/fixtures/` 作为回归用例。
 
 ## 为什么保留 puppeteer(不去浏览器化)
 
-引擎 `verifyArticleStructure` 的布局类规则强依赖 `getBoundingClientRect` / `offsetHeight` / `getComputedStyle` 的真实浏览器测量，jsdom 等无头 DOM 方案做不了布局，只能跑收集阶段规则，对一个「样式检测工具」是硬伤。因此本 CLI 以 puppeteer 为正解，跑全规则。
+引擎 `verifyArticleStructure` 的布局类规则强依赖 `getBoundingClientRect` / `offsetHeight` / `getComputedStyle` 的真实浏览器测量，jsdom 等无头 DOM 方案做不了布局，只能跑收集阶段规则，对一个「样式检测工具」是硬伤。因此本 CLI 使用 puppeteer 完成布局测量。
 
 ## 安装
 
@@ -157,7 +159,7 @@ Usage: pnpm dedupe <file.html> [options]   # dedupe
 
 | 维度 | `check` | `dedupe` |
 |---|---|---|
-| 职责 | 检测样式违规（puppeteer 跑全规则，含布局类） | 真删冗余嵌套层，输出清理后 HTML |
+| 职责 | 检测已实现的样式与结构规则（puppeteer，含布局类） | 真删冗余嵌套层，输出清理后 HTML |
 | deleteNestNode 模式 | `isTest: true`（干跑只检测） | `isNeedDelete: true`（真删，改 AST 结构） |
 | 跑在哪 | 真实 DOM（`innerHTML` 建容器） | 可变 AST（DOM→AST 转换） |
 | 浏览器 | puppeteer（必需，跑布局规则） | jsdom（默认）；puppeteer（仅 `--verify`） |
