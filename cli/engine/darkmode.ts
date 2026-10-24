@@ -62,14 +62,11 @@ function collectWhitelistAttributes(opts?: DarkmodeRunOptions): string[] {
   return attrs;
 }
 
-// reset: clear the darkmode data attributes and JS expando markers the run
-// stamped on nodes, and invoke mp-darkmode's public reset() API so subsequent
-// runs on the same DOM nodes do not read stale markers.
+// reset: let mp-darkmode clear its JS markers and internal state, then remove
+// HTML markers accepted by readDarkAttr.
 function reset(nodes: Node[] | NodeListOf<Element>, _opts?: DarkmodeRunOptions): void {
   const nodeArray = Array.from(nodes as ArrayLike<Element>) as Element[];
-  try {
-    (Darkmode as any).reset?.(nodeArray);
-  } catch { /* no-op */ }
+  (Darkmode as any).reset(nodeArray);
 
   const html = document.getElementsByTagName('html')[0];
   html?.classList.remove('js_darkmode__');
@@ -87,11 +84,6 @@ function reset(nodes: Node[] | NodeListOf<Element>, _opts?: DarkmodeRunOptions):
       }
     }
     toRemove.forEach(n => node.removeAttribute(n));
-    for (const key of Object.keys(node as any)) {
-      if (key.startsWith('data-darkmode-')) {
-        delete (node as any)[key];
-      }
-    }
   });
 }
 
