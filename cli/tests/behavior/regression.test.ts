@@ -137,4 +137,20 @@ describe('cli vendored engine — behavior regression (spec badcases/goodcases)'
     // 容忍 CI 波动的同时确保「死等超时」的回归必然被抓住。
     expect(elapsed).toBeLessThan(3000);
   }, 120000);
+
+  test('editing a reused node updates gradient diagnostics on every verification (#53)', async () => {
+    const counts = await page!.evaluate(async () => {
+      const container = document.createElement('div');
+      container.innerHTML = '<p style="color:#222">深色模式重复验证</p>';
+      const target = container.firstElementChild as HTMLElement;
+      const counts: number[] = [];
+      for (const background of ['linear-gradient(90deg,#fff,#eee)', 'none', 'linear-gradient(90deg,#fff,#eee)', 'none']) {
+        target.style.backgroundImage = background;
+        const result = await (window as any).verifyArticleStructure(container);
+        counts.push(result.inValidInfo['darkmode-no-gradient']?.items.length ?? 0);
+      }
+      return counts;
+    });
+    expect(counts).toEqual([1, 0, 1, 0]);
+  }, 120000);
 });

@@ -2,22 +2,15 @@
 // Flow: darkmode convert/validate → getParaList → nest detection (dry-run) →
 // collect style candidates → layout measurement → aggregate by property.
 
+import Darkmode from 'mp-darkmode';
+
 import getParaList from './paragraph.js';
 import { domUtils } from './dom.js';
 import { deleteNestNode } from './nest.js';
-import Darkmode from './darkmode.js';
 import { propertyRules } from './rules-text.js';
 import { getInvalidNodes } from './collect.js';
 import { detectLayoutIssues } from './layout.js';
 import type { VerifyOpts, VerifyResult, ViolationEntry } from './types.js';
-
-const DARKMODE_RUN_OPTS = {
-  mode: 'dark',
-  defaultDarkTextColor: '#989898',
-  whitelist: { attribute: ['data-no-dark'] },
-  needJudgeFirstPage: false,
-  noEmit: true,
-};
 
 // Reverse-lookup the paragraph index for a node via the nearest data-blockidx
 // ancestor, falling back to paragraphList.contains. Returns -1 when unknown.
@@ -54,9 +47,15 @@ async function verifyArticleStructure(articleBody: any, opts: VerifyOpts = {}): 
   const doc = typeof document !== 'undefined' ? document : null;
   const detached = doc && doc.body && !articleBody.parentNode;
   if (detached) doc!.body.appendChild(articleBody);
-  Darkmode.reset(nodes, DARKMODE_RUN_OPTS);
-  Darkmode.run(nodes, DARKMODE_RUN_OPTS);
-  const darkmodeResult = Darkmode.validate(articleBody, DARKMODE_RUN_OPTS);
+  Darkmode.reset(nodes);
+  Darkmode.run(nodes, {
+    mode: 'dark',
+    defaultDarkTextColor: '#989898',
+    whitelist: { attribute: ['data-no-dark'] },
+    needJudgeFirstPage: false,
+    noEmit: true,
+  });
+  const darkmodeResult = Darkmode.validate(articleBody);
   if (detached) doc!.body.removeChild(articleBody);
 
   const paragraphList = getParaList(articleBody, {
