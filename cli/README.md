@@ -186,7 +186,7 @@ pnpm probe
 
 ### darkmode 换包
 
-`cli/engine/darkmode.ts` 不再 vendor 55KB 的 minified UMD bundle，改用 npm 开源包 `mp-darkmode@1.2.2` 做暗色转换。vanilla 包仅导出 `run` / `init` / `getContrast` / `convertBg` / `extend` / `updateStyle`，引擎专用的 `reset`（清节点标记 + init 状态）与 `validate`（收集 darkmode 违规：低对比度 / 渐变背景 / 白名单属性）由引擎自身重写实现。darkmode 维度无 spec 回归用例覆盖，正确性靠与原 bundle 的人工对照（已验证 whitelist/contrast/mixed/clean 四类样本 byte-identical）。
+不再 vendor 55KB 的 minified UMD bundle，改用 [mp-darkmode npm 开源包](https://www.npmjs.com/package/mp-darkmode) 做暗色转换。
 
 ### 注释规范
 
@@ -222,7 +222,6 @@ cli/
 │   ├── dom.ts                # isMarkNode / specialTags / isEmptyParagraph
 │   ├── collect.ts            # 收集阶段：段落 BFS + 调各规则 checker
 │   ├── layout.ts             # 布局阶段：sandbox 多屏测量 + width/line-height/pre/height 判定
-│   ├── darkmode.ts           # mp-darkmode 包转换 + 引擎自实现 reset/validate
 │   └── rules/                # 每规则一个纯函数文件 + 共享 helpers
 │       ├── font-family.ts / opacity.ts / caret-color.ts / line-height.ts
 │       ├── width.ts / text-align.ts / animate-begin.ts / height-zero.ts / pre.ts
