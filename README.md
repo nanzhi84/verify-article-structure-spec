@@ -190,6 +190,8 @@ verify-article-structure-spec/
 
 | 版本 | 日期 | 变更 |
 |---|---|---|
+| 0.2.25 | 2026-10-26 | darkmode 阶段去掉自实现：`mp-darkmode` 升至 1.2.3-alpha.6，删除 `cli/engine/darkmode.ts`，reset/validate 全部改用上游公开 API；顺带修掉旧自实现 reset 的两处失效（html class 名写死 `js_darkmode__`、用 `removeAttribute` 清 expando 标记，实际都清不掉）；34 个 spec fixture 改前改后检测结果完全一致，新增「复用节点重复验证」回归用例（#53） |
+| 0.2.24 | 2026-10-19 | 避免可横向滚动代码块的 pre 误报警告（PR #52） |
 | 0.2.23 | 2026-10-14 | 定位章与 quickRegex 解耦：段落子树无条件盖 data-blockidx，段号反查直接命中真实段落（PR #50 根治版，PR #49 的包含性验证保留为纵深防御；quickRegex 过滤原样保留，性能优化不受影响） |
 | 0.2.22 | 2026-10-13 | 段号反查增加 stamp 包含性验证：quickRegex 跳过的无样式段落（如 ul 列表块）不再穿透到外层容器的假段号 0，落到真实所属段落 |
 | 0.2.21 | 2026-10-13 | 修复 npm 发布包 check 命令报 __awaiter is not defined（构建 target ES2016→ES2017，async 原生化）；此前发布包的 dist 从 tsc 编译化起即不可用，源码（tsx）路径一直正常 |
